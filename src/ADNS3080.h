@@ -22,6 +22,8 @@
 
 // Registers: 
 #define ADNS3080_PRODUCT_ID           0x00
+#define ADNS3080_REVISION_ID          0x01
+#define ADNS3080_INVERSE_PRODUCT_ID   0x3f
 #define ADNS3080_CONFIGURATION_BITS   0x0a
 #define ADNS3080_MOTION_CLEAR         0x12
 #define ADNS3080_FRAME_CAPTURE        0x13
@@ -49,7 +51,13 @@ class ADNS3080 {
   public:
   	// Read and write registers:
     void writeRegister( const uint8_t, uint8_t );
-    uint8_t readRegister( const uint8_t );  
+    uint8_t readRegister( const uint8_t );
+    
+    // Tests
+    uint8_t getProductID();
+    uint8_t getRevisionID();
+    uint8_t getInverseProductID();
+    bool testProductID();  
      
     // Miscellaneous functions:
     void reset();

@@ -82,6 +82,38 @@ void ADNS3080<TEMPLATE_INPUTS>
   writeRegister( ADNS3080_MOTION_CLEAR, 0x00 );
 }
 
+//----------------- Tests ----------------------------
+
+//Get the product id.  Should be 0x17
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getProductID() {
+  return readRegister(ADNS3080_PRODUCT_ID);
+}
+
+//Get the revision id.
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getRevisionID() {
+  return readRegister(ADNS3080_REVISION_ID);
+}
+
+//Get the inverse product id.  Should be E8
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getInverseProductID() {
+  return readRegister(ADNS3080_INVERSE_PRODUCT_ID);
+}
+
+//Check that the inverse product id really is the inverse of the product id
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::testProductID() {
+  uint8_t manually_inverted_prod_id = ~getProductID();
+  uint8_t chip_inverse_prod_id = getInverseProductID();
+  return ( chip_inverse_prod_id == manually_inverted_prod_id );
+}
+
 //----------------- Major outputs --------------------
 
 // Get motion burst data
