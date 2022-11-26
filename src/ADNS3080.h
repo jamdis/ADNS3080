@@ -44,11 +44,13 @@
 template <TEMPLATE_TYPE>
 class ADNS3080 {  
   private:
-    // Read and write registers:
-    void writeRegister( const uint8_t, uint8_t );
-    uint8_t readRegister( const uint8_t );
+    
    
-  public:   
+  public:
+  	// Read and write registers:
+    void writeRegister( const uint8_t, uint8_t );
+    uint8_t readRegister( const uint8_t );  
+     
     // Miscellaneous functions:
     void reset();
     bool setup( const bool, const bool );
