@@ -222,7 +222,7 @@ void ADNS3080<TEMPLATE_INPUTS>
 ::setManualShutter( bool set_to ) {
   uint8_t ext_config = getExtConfig();
   uint8_t new_config = setBit( ext_config, 1 , set_to );
-  setConfig( new_config );
+  setExtConfig( new_config );
 }
 
 template<TEMPLATE_TYPE>
@@ -238,7 +238,7 @@ void ADNS3080<TEMPLATE_INPUTS>
 ::setManualFrameRate( bool set_to ) {
   uint8_t ext_config = getExtConfig();
   uint8_t new_config = setBit( ext_config, 0 , set_to );
-  setConfig( new_config );
+  setExtConfig( new_config );
 }
 
 template<TEMPLATE_TYPE>
@@ -257,6 +257,12 @@ template<TEMPLATE_TYPE>
 uint16_t ADNS3080<TEMPLATE_INPUTS>
 ::getFramePeriod( ) {
   return readDoubleRegister( ADNS3080_FRAME_PERIOD_LOWER );
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::getShutter( ) {
+  return readDoubleRegister( ADNS3080_SHUTTER_LOWER );
 }
 
 template<TEMPLATE_TYPE>

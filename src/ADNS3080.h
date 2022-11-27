@@ -40,6 +40,8 @@
 #define ADNS3080_PIXEL_BURST                   0x40
 #define ADNS3080_MOTION_BURST                  0x50
 #define ADNS3080_PRODUCT_ID_VALUE              0x17
+#define ADNS3080_SHUTTER_LOWER	               0x0e
+#define ADNS3080_SHUTTER_UPPER	               0x0f
 #define ADNS3080_FRAME_PERIOD_LOWER            0x10
 #define ADNS3080_FRAME_PERIOD_UPPER            0x11
 #define ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER  0x19
@@ -121,7 +123,6 @@ class ADNS3080 {
     uint16_t getFramePeriod();
     uint16_t getFramePeriodMaxBound();
     void setFramePeriodMaxBound( uint16_t set_to );
-    
     uint16_t getFramePeriodMinBound();
     void setFramePeriodMinBound( uint16_t set_to );
     bool setExposure( bool manual_fp, bool manual_shutter, uint16_t frame_period_max, uint16_t frame_period_min, uint16_t shutter_max);
