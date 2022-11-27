@@ -113,7 +113,7 @@ class ADNS3080 {
     bool getManualShutter();
     void setManualShutter( bool set_to );
     uint16_t getShutter();
-	void setShutter( uint16_t set_to ); //actually sets this via the shuttermaxbound register
+	void setShutterMaxBound( uint16_t set_to ); //actually sets this via the shuttermaxbound register
     uint16_t getShutterMaxBound();
     uint16_t getFramePeriod();
     uint16_t getFramePeriodMaxBound();

@@ -249,7 +249,7 @@ uint16_t ADNS3080<TEMPLATE_INPUTS>
 
 template<TEMPLATE_TYPE>
 void ADNS3080<TEMPLATE_INPUTS>
-::setShutter( uint16_t set_to ) {	//Setting shutter and setting shutter_max_bound are the same register
+::setShutterMaxBound( uint16_t set_to ) {	//Setting shutter and setting shutter_max_bound are the same register
   writeDoubleRegister( set_to, ADNS3080_SHUTTER_MAX_BOUND_LOWER );
 }
 
@@ -282,7 +282,6 @@ void ADNS3080<TEMPLATE_INPUTS>
 ::setFramePeriodMinBound( uint16_t set_to ) {	
   writeDoubleRegister( set_to, ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER ); 
 }
-
 
 template<TEMPLATE_TYPE>
 bool ADNS3080<TEMPLATE_INPUTS>
