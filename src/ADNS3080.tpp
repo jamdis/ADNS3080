@@ -285,7 +285,42 @@ void ADNS3080<TEMPLATE_INPUTS>
 
 template<TEMPLATE_TYPE>
 bool ADNS3080<TEMPLATE_INPUTS>
-::setExposure( uint16_t testy ) {	
+::setExposure( bool manual_fp, bool manual_shutter, uint16_t frame_period_max, uint16_t frame_period_min, uint16_t shutter_max) {	
+	//this function ensures that exposure registers are set in the proper order to
+	//actually take efect, and enforces the rules laid out in the datasheet
+	//returns 1 on error
+	
+	//Sanity checks on parameters:
+	if( !manual_fp && manual_shutter ){ //Can’t have manual shutter without manual frame rate
+		return 1;
+	}
+	if( frame_period_min < ADNS3080_MIN_FR ){ //Frame_period_min must be greater than 0x7E0E:
+		frame_period_min = ADNS3080_MIN_FR;
+	}
+	//maxes must be higher than minimums:
+	if( frame_period_max < frame_period_min ){
+		frame_period_min = frame_period_max;
+	}
+	//Shutter can’t be slower than frame rate: Frame_Period_Max_Bound ≥ Frame_Period_Min_Bound + Shutter_Max_Bound
+	if( frame_period_max < frame_period_min + shutter_max ){
+		frame_period_max = frame_period_min + shutter_max;
+	}
+	//Check if busy
+	if( getBusy() ){
+		return 1;
+	}
+	//Set frame_rate & shutter to manual / auto
+	setManualFrameRate( manual_fp );
+	setManualShutter( manual_shutter );
+
+	//Write to shutter_max
+	setShutterMaxBound( shutter_max );
+	
+	//Write to frame_period_min
+	setFramePeriodMinBound( frame_period_min );
+	//Write to frame_period_max LAST
+	setFramePeriodMinBound( frame_period_max );
+	
    return true;
 }
 

@@ -20,6 +20,9 @@
 #define ADNS3080_PIXELS_X             30
 #define ADNS3080_PIXELS_Y             30
 
+// minimum frame rate allowed
+#define ADNS3080_MIN_FR               0x7e0e
+
 // Registers: 
 #define ADNS3080_PRODUCT_ID                    0x00
 #define ADNS3080_REVISION_ID                   0x01
@@ -121,7 +124,7 @@ class ADNS3080 {
     
     uint16_t getFramePeriodMinBound();
     void setFramePeriodMinBound( uint16_t set_to );
-    bool setExposure( uint16_t set_to );
+    bool setExposure( bool manual_fp, bool manual_shutter, uint16_t frame_period_max, uint16_t frame_period_min, uint16_t shutter_max);
     
     
     // Major outputs:
