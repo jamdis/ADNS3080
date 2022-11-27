@@ -325,7 +325,7 @@ bool ADNS3080<TEMPLATE_INPUTS>
 	//Write to frame_period_min
 	setFramePeriodMinBound( frame_period_min );
 	//Write to frame_period_max LAST
-	setFramePeriodMinBound( frame_period_max );
+	setFramePeriodMaxBound( frame_period_max );
 	
    return true;
 }
