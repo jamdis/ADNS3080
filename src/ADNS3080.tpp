@@ -31,6 +31,26 @@ uint8_t ADNS3080<TEMPLATE_INPUTS>
   return output;
 }
 
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::writeDoubleRegister( uint16_t set_to, uint8_t lower_register ) {	
+  uint8_t upper = upperByte( set_to );
+  uint8_t lower = lowerByte( set_to );
+  writeRegister( lower_register, lower ); //set lower first
+  writeRegister( lower_register + 1, upper ); 
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::readDoubleRegister( uint8_t lower_register ) {
+  uint8_t upper = readRegister( lower_register + 1 ); //Read upper first
+  uint8_t lower = readRegister( lower_register ); 
+  return concatenateBytes( upper, lower );
+}
+
+
+
+
 //------------ Miscellaneous functions ---------------
 
 // Cycle reset pin
@@ -224,61 +244,53 @@ void ADNS3080<TEMPLATE_INPUTS>
 template<TEMPLATE_TYPE>
 uint16_t ADNS3080<TEMPLATE_INPUTS>
 ::getShutterMaxBound( ) {
-  uint8_t upper = readRegister( ADNS3080_SHUTTER_MAX_BOUND_UPPER ); //Read upper first
-  uint8_t lower = readRegister( ADNS3080_SHUTTER_MAX_BOUND_LOWER ); 
-  return concatenateBytes( upper, lower );
+  return readDoubleRegister( ADNS3080_SHUTTER_MAX_BOUND_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 void ADNS3080<TEMPLATE_INPUTS>
 ::setShutter( uint16_t set_to ) {	//Setting shutter and setting shutter_max_bound are the same register
-  uint8_t upper = upperByte( set_to );
-  uint8_t lower = lowerByte( set_to );
-  writeRegister( ADNS3080_SHUTTER_MAX_BOUND_LOWER, lower ); //set lower first
-  writeRegister( ADNS3080_SHUTTER_MAX_BOUND_UPPER, upper ); 
+  writeDoubleRegister( set_to, ADNS3080_SHUTTER_MAX_BOUND_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 uint16_t ADNS3080<TEMPLATE_INPUTS>
 ::getFramePeriod( ) {
-  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_UPPER ); //Read upper first
-  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_LOWER ); 
-  return concatenateBytes( upper, lower );
+  return readDoubleRegister( ADNS3080_FRAME_PERIOD_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 uint16_t ADNS3080<TEMPLATE_INPUTS>
 ::getFramePeriodMaxBound( ) {
-  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_UPPER ); //Read upper first
-  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER ); 
-  return concatenateBytes( upper, lower );
+  return readDoubleRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 void ADNS3080<TEMPLATE_INPUTS>
 ::setFramePeriodMaxBound( uint16_t set_to ) {	
-  uint8_t upper = upperByte( set_to );
-  uint8_t lower = lowerByte( set_to );
-  writeRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER, lower ); //set lower first
-  writeRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_UPPER, upper ); 
+  writeDoubleRegister( set_to, ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 uint16_t ADNS3080<TEMPLATE_INPUTS>
 ::getFramePeriodMinBound( ) {
-  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_UPPER ); //Read upper first
-  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER ); 
-  return concatenateBytes( upper, lower );
+  return readDoubleRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER );
 }
 
 template<TEMPLATE_TYPE>
 void ADNS3080<TEMPLATE_INPUTS>
 ::setFramePeriodMinBound( uint16_t set_to ) {	
-  uint8_t upper = upperByte( set_to );
-  uint8_t lower = lowerByte( set_to );
-  writeRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER, lower ); //set lower first
-  writeRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_UPPER, upper ); 
+  writeDoubleRegister( set_to, ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER ); 
 }
+
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::setExposure( uint16_t testy ) {	
+   return true;
+}
+
+
 
 
 //----------------- Tests ----------------------------

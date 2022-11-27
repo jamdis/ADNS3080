@@ -76,6 +76,8 @@ class ADNS3080 {
   	// Read and write registers:
     void writeRegister( const uint8_t, uint8_t );
     uint8_t readRegister( const uint8_t );
+    void writeDoubleRegister( uint16_t set_to, uint8_t lower_register );
+    uint16_t readDoubleRegister( uint8_t lower_register );
     
     // Tests
     uint8_t getProductID();
@@ -116,14 +118,10 @@ class ADNS3080 {
     uint16_t getFramePeriod();
     uint16_t getFramePeriodMaxBound();
     void setFramePeriodMaxBound( uint16_t set_to );
-    /*
     
-    //TODO
-    uint16_t getFramePeriodMinBound();//TODO
-    void setFramePeriodMinBound( uint16_t set_to );//TODO
-    //TODO
-    void setExposure( uint16_t set_to );//TODO
-    */
+    uint16_t getFramePeriodMinBound();
+    void setFramePeriodMinBound( uint16_t set_to );
+    bool setExposure( uint16_t set_to );
     
     
     // Major outputs:
