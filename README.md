@@ -1,4 +1,10 @@
 # ADNS3080
+This is a fork of RCmag's awesome arduino library for the ADNS3080.
+
+The goal is to include getters and setters for more of the registers listed in the datasheet, in particular I wanted to add exposure control.
+
+_____Original Readme____:
+
 This is an Arduino library for ADNS3080 mouse sensor. It provides a simple interface to retrieve motion and frame data from the sensor. It is generally sold as a module with a lens attached. This code was written for such a module. The following schematic shows how to connect the module to an arduino uno. It's the same for other boards except the SPI spins change. 
 
 <img src = "extras/ADNS3080_arduino_wiring.jpg" width = "40%" height = "40%"> 
