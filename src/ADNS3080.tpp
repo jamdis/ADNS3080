@@ -75,12 +75,211 @@ bool ADNS3080<TEMPLATE_INPUTS>
   } 
 }
 
+// Read the motion register
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getMotion() {
+  return readRegister( ADNS3080_MOTION );
+}
+
+// Read delta x and delta y
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getDeltaX() {
+  return readRegister( ADNS3080_DELTA_X );
+}
+
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getDeltaY() {
+  return readRegister( ADNS3080_DELTA_Y );
+}
+
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getSqual() {
+  return readRegister( ADNS3080_SQUAL );
+}
+
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getPixelSum() {
+  return readRegister( ADNS3080_PIXEL_SUM );
+}
+
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getMaxPixel() {
+  return readRegister( ADNS3080_MAX_PIXEL );
+}
+
 // Clear DELTA_X, DELTA_Y and motion registers
 template<TEMPLATE_TYPE>
 void ADNS3080<TEMPLATE_INPUTS>
 ::motionClear() {
   writeRegister( ADNS3080_MOTION_CLEAR, 0x00 );
 }
+
+
+//----------------- Config ---------------------------
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getConfig() {
+  return readRegister( ADNS3080_CONFIGURATION_BITS );
+}
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getLedMode() {
+  uint8_t config = getConfig();
+  bool led_mode = getBit( config, 6 );
+  return led_mode;
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setLedMode( bool set_to ) {
+  uint8_t config = getConfig();
+  uint8_t new_config = setBit( config, 6 , set_to );
+  setConfig( new_config );
+}
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getResolution() {
+  uint8_t config = getConfig();
+  bool resolution = getBit( config, 4 );
+  return resolution;
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setResolution( bool set_to ) {
+  uint8_t config = getConfig();
+  uint8_t new_config = setBit( config, 4 , set_to );
+  setConfig( new_config );
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setConfig( uint8_t new_config ) {
+  writeRegister( ADNS3080_CONFIGURATION_BITS, new_config );
+}
+
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::getExtConfig() {
+  return readRegister( ADNS3080_EXTENDED_CONFIG );
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setExtConfig( uint8_t new_ext_config ) {
+  writeRegister( ADNS3080_EXTENDED_CONFIG, new_ext_config );
+}
+
+
+//----------------- Exposure ----------------------------
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getBusy() {
+  uint8_t ext_config = getExtConfig();
+  bool busy = getBit( ext_config, 7 );
+  return busy;
+}
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getManualShutter() {
+  uint8_t ext_config = getExtConfig();
+  bool manual_shutter = getBit( ext_config, 1 );
+  return manual_shutter;
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setManualShutter( bool set_to ) {
+  uint8_t ext_config = getExtConfig();
+  uint8_t new_config = setBit( ext_config, 1 , set_to );
+  setConfig( new_config );
+}
+
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getManualFrameRate() {
+  uint8_t ext_config = getExtConfig();
+  bool manual_frame_rate = getBit( ext_config, 0 );
+  return manual_frame_rate;
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setManualFrameRate( bool set_to ) {
+  uint8_t ext_config = getExtConfig();
+  uint8_t new_config = setBit( ext_config, 0 , set_to );
+  setConfig( new_config );
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::getShutterMaxBound( ) {
+  uint8_t upper = readRegister( ADNS3080_SHUTTER_MAX_BOUND_UPPER ); //Read upper first
+  uint8_t lower = readRegister( ADNS3080_SHUTTER_MAX_BOUND_LOWER ); 
+  return concatenateBytes( upper, lower );
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setShutter( uint16_t set_to ) {	//Setting shutter and setting shutter_max_bound are the same register
+  uint8_t upper = upperByte( set_to );
+  uint8_t lower = lowerByte( set_to );
+  writeRegister( ADNS3080_SHUTTER_MAX_BOUND_LOWER, lower ); //set lower first
+  writeRegister( ADNS3080_SHUTTER_MAX_BOUND_UPPER, upper ); 
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::getFramePeriod( ) {
+  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_UPPER ); //Read upper first
+  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_LOWER ); 
+  return concatenateBytes( upper, lower );
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::getFramePeriodMaxBound( ) {
+  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_UPPER ); //Read upper first
+  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER ); 
+  return concatenateBytes( upper, lower );
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setFramePeriodMaxBound( uint16_t set_to ) {	
+  uint8_t upper = upperByte( set_to );
+  uint8_t lower = lowerByte( set_to );
+  writeRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_LOWER, lower ); //set lower first
+  writeRegister( ADNS3080_FRAME_PERIOD_MAX_BOUND_UPPER, upper ); 
+}
+
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::getFramePeriodMinBound( ) {
+  uint8_t upper = readRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_UPPER ); //Read upper first
+  uint8_t lower = readRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER ); 
+  return concatenateBytes( upper, lower );
+}
+
+template<TEMPLATE_TYPE>
+void ADNS3080<TEMPLATE_INPUTS>
+::setFramePeriodMinBound( uint16_t set_to ) {	
+  uint8_t upper = upperByte( set_to );
+  uint8_t lower = lowerByte( set_to );
+  writeRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_LOWER, lower ); //set lower first
+  writeRegister( ADNS3080_FRAME_PERIOD_MIN_BOUND_UPPER, upper ); 
+}
+
 
 //----------------- Tests ----------------------------
 
@@ -209,4 +408,55 @@ void ADNS3080<TEMPLATE_INPUTS>
   // Disable communication
   digitalWrite( PIN_NCS, HIGH ); 
   delayMicroseconds( ADNS3080_T_LOAD + ADNS3080_T_BEXIT );
-}    
+}
+
+//----------------- Utils --------------------
+//Get bit n from a byte
+template<TEMPLATE_TYPE>
+bool ADNS3080<TEMPLATE_INPUTS>
+::getBit( uint8_t number, uint8_t n ) {
+  bool bit;
+  
+  bit = (number >> n) & 1U;
+  
+  return bit;
+}
+
+//Set bin n in a byte
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::setBit( uint8_t number, uint8_t n, bool set_to ) {
+  number ^= ( -set_to ^ number ) & (1U << n );
+  
+  return number;
+}
+
+//Concatenate two bytes into a 16 bit number
+template<TEMPLATE_TYPE>
+uint16_t ADNS3080<TEMPLATE_INPUTS>
+::concatenateBytes( uint8_t upper, uint8_t lower ) {
+  uint16_t output = upper;
+  output = output << 8;
+  output = output | lower; 
+  return output;
+}
+
+//Get lower 8 bits from 16 bit number
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::lowerByte( uint16_t input ) {
+  uint8_t output = input & 0xFF;
+  return output;
+}
+
+//Get upper 8 bits from 16 bit number
+template<TEMPLATE_TYPE>
+uint8_t ADNS3080<TEMPLATE_INPUTS>
+::upperByte( uint16_t input ) {
+  uint8_t output = input >> 8;
+  return output;
+}
+
+
+    
+    
